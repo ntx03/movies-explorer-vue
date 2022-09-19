@@ -3,14 +3,46 @@ import { useLoggedInStore } from '../stores/logginIn';
 import router from '@/router';
 import { RouterLink } from 'vue-router';
 const loggedIn = useLoggedInStore();
-
+import { watch, ref } from 'vue';
 export default {
+
     name: 'login',
     data() {
         return {
             email: '',
-            password: ''
+            password: '',
+            loginError: false,
+            loginErrorAuthorize: true,
         }
+    },
+    setup() {
+        // const email = ref('');
+        // const password = ref('');
+        const emailValidate = ref(false);
+        const passwordValidate = ref(false);
+        const isDisabled = ref(false);
+        // function checkEmail() {
+        //     const re =
+        //         /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        //     if (!re.test(String(email).toLowerCase())) {
+        //         emailValidate.value = true;
+        //     } else emailValidate.value = false;
+        // }
+        // function checkPassword() {
+        //     const p = password;
+        //     if (p.length < 3) {
+        //         passwordValidate.value = true;
+        //     } else {
+        //         passwordValidate.value = false;
+        //     }
+        // }
+        watch([emailValidate, passwordValidate], ([newEmailValidate, newPpasswordValidate]) => {
+            if (newEmailValidate === false && newPpasswordValidate === false) {
+                isDisabled.value = false;
+            } else { isDisabled.value = true; }
+
+        });
+        return { emailValidate, passwordValidate, isDisabled }
     },
     methods: {
         login(e: any): void {
@@ -18,25 +50,49 @@ export default {
             loggedIn.loggedTrue();
             this.$router.push('/movies')
         },
+        checkEmail() {
+            const re =
+                /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+            if (!re.test(String(this.email).toLowerCase())) {
+                this.emailValidate = true;
+            } else this.emailValidate = false;
+        },
+        checkPassword() {
+            if (this.password.length < 3) {
+                this.passwordValidate = true;
+            } else {
+                this.passwordValidate = false;
+            }
+        }
     },
+    // computed: {
+    //     checkValidate(): void {
+    //         if (this.emailValidate === false || this.passwordValidate === false) {
+    //             this.isDisabled = false;
+    //         } else this.isDisabled = true;
+    //     }
+    // }
 }
 </script>
 
 <template>
     <section class='login'>
-        <form class='login__container'>
+        <form class='login__container' novalidate>
             <RouterLink to='/' class='login__logo'><img src='../assets/logo.svg' alt='зеленый смайлик' />
             </RouterLink>
             <h2 class='login__title'>Рады видеть!</h2>
             <p class='login__input-name'>E-mail</p>
-            <input type="email" class='login__input' required v-model="email" />
+            <input type="email" class='login__input' :class="{'login__input-error': emailValidate }" required
+                v-model="email" @input="checkEmail" />
             <p class='login__input-name'>Пароль</p>
-            <input type=" password" class='login__input' required v-model='password' />
+            <input type=" password" @input="checkPassword" class='login__input'
+                :class="{'login__input-error': passwordValidate }" required v-model='password' />
             <div class='login__name-error-container'>
-                <!-- <p className={loginErrorAuthorize ? 'login__name-error' : 'login__name-error-none' }> {loginError ? 'На
-                    сервере произошла ошибка.' : 'Вы ввели неправильный логин или пароль.'}</p> -->
+                <p class="login__name-error" :class="{'login__name-error-none': loginErrorAuthorize }">Вы ввели
+                    неправильный логин или пароль.</p>
             </div>
-            <button class='login__button' @click="login">Войти</button>
+            <button :disabled="isDisabled" class='login__button' :class="{'login__button-disable':isDisabled }"
+                @click="login">Войти</button>
             <div class='login__signin-container'>
                 <p class='login__signin-text'>Еще не зарегистрированы?</p>
                 <RouterLink to='/signup' class='login__signin-link'>Регистрация</RouterLink>

@@ -1,40 +1,85 @@
 <script lang="ts">
 import router from '@/router';
+import { watch, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 export default {
     name: 'registration',
     data() {
         return {
-            name: '',
+            nameUser: '',
             email: '',
-            password: ''
+            password: '',
+            // emailValidate: false,
+            // passwordValidate: false,
+            // nameValidate: false,
+            loginError: false,
+            loginErrorAuthorize: true,
+            // isDisabled: true
         }
+    },
+    setup() {
+        const emailValidate = ref(false);
+        const passwordValidate = ref(false);
+        const isDisabled = ref(false);
+        const nameValidate = ref(false);
+        watch([emailValidate, passwordValidate, nameValidate], ([newEmailValidate, newPasswordValidate, newnNameValidate]) => {
+            if (newEmailValidate === false && newPasswordValidate === false && newnNameValidate == false) {
+                isDisabled.value = false;
+            } else { isDisabled.value = true; }
+
+        });
+        return { emailValidate, passwordValidate, isDisabled, nameValidate }
     },
     methods: {
         register() {
             router.push(({ name: "movies" }))
         }
     },
+    checkEmail() {
+        const re =
+            /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        if (!re.test(String(this.email).toLowerCase())) {
+            this.emailValidate = true;
+        } else this.emailValidate = false;
+    },
+    checkPassword() {
+        if (this.password.length < 3) {
+            this.passwordValidate = true;
+        } else {
+            this.passwordValidate = false;
+        }
+    },
+    checkName() {
+        if (this.nameUser.length < 3) {
+            this.nameValidate = true;
+        } else {
+            this.nameValidate = false;
+        }
+    }
 }
 </script>
 
 <template >
     <section class='register'>
-        <form class='register__container' @submit="register">
+        <form class='register__container' @submit="register" novalidate>
             <RouterLink to='/' class='register__logo'><img src='../assets/logo.svg' alt='зеленый смайлик' />
             </RouterLink>
             <h2 class='register__title'>Добро пожаловать!</h2>
             <p class='register__input-name'>Имя</p>
-            <input type="text" class='register__input' required placeholder='Имя' v-model='name' />
+            <input type="text" class='register__input' :class="{'register__input-error': nameValidate }"
+                @input="checkName" required placeholder='Имя' v-model='nameUser' />
             <p class='register__input-name'>E-mail</p>
-            <input type="email" class='register__input' required placeholder='Email' v-model='email' />
+            <input type="email" class='register__input' @input="checkEmail"
+                :class="{'register__input-error': emailValidate }" required placeholder='Email' v-model='email' />
             <p class='register__input-name'>Пароль</p>
-            <input type="password" class='register__input' required v-model='password' />
+            <input type="password" class='register__input' @input="checkPassword"
+                :class="{'register__input-error': passwordValidate }" required v-model='password' />
             <div class='register__name-error-container'>
                 <p class='register__name-error-none'>{errorRegister ? 'При регистрации пользователя произошла ошибка' :
                     "Пользователь с таким email уже существует"}</p>
             </div>
-            <button class='register__button'>Зарегистрироваться</button>
+            <button :disabled="isDisabled" class='register__button' :class="{'register__input-error': isDisabled }">
+                Зарегистрироваться </button>
             <div className='register__signin-container'>
                 <p className='register__signin-text'>Уже зарегистрированы?</p>
                 <RouterLink to='/signin' className='register__signin-link'>Войти</RouterLink>
