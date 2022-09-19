@@ -1,0 +1,308 @@
+<script lang="ts">
+import router from '@/router';
+import { RouterLink } from 'vue-router';
+export default {
+    name: 'registration',
+    data() {
+        return {
+            name: '',
+            email: '',
+            password: ''
+        }
+    },
+    methods: {
+        register() {
+            router.push(({ name: "movies" }))
+        }
+    },
+}
+</script>
+
+<template >
+    <section class='register'>
+        <form class='register__container' @submit="register">
+            <RouterLink to='/' class='register__logo'><img src='../assets/logo.svg' alt='зеленый смайлик' />
+            </RouterLink>
+            <h2 class='register__title'>Добро пожаловать!</h2>
+            <p class='register__input-name'>Имя</p>
+            <input type="text" class='register__input' required placeholder='Имя' v-model='name' />
+            <p class='register__input-name'>E-mail</p>
+            <input type="email" class='register__input' required placeholder='Email' v-model='email' />
+            <p class='register__input-name'>Пароль</p>
+            <input type="password" class='register__input' required v-model='password' />
+            <div class='register__name-error-container'>
+                <p class='register__name-error-none'>{errorRegister ? 'При регистрации пользователя произошла ошибка' :
+                    "Пользователь с таким email уже существует"}</p>
+            </div>
+            <button class='register__button'>Зарегистрироваться</button>
+            <div className='register__signin-container'>
+                <p className='register__signin-text'>Уже зарегистрированы?</p>
+                <RouterLink to='/signin' className='register__signin-link'>Войти</RouterLink>
+            </div>
+        </form>
+    </section>
+</template>
+
+<style >
+.register {
+    min-height: 100vh;
+    width: 100%;
+    background-color: #202020;
+}
+
+.register__container {
+    max-width: 396px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto 0 auto;
+}
+
+.register__logo {
+    padding-top: 70px;
+    width: 38px;
+    height: 38px;
+    margin: 0 auto 40px 0;
+}
+
+.register__title {
+    padding: 0;
+    margin: 0;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 24px;
+    line-height: 29px;
+    font-style: normal;
+    font-weight: normal;
+    color: #FFFFFF;
+    margin: 0 auto 30px 0;
+}
+
+.register__input-name {
+    padding: 0;
+    margin: 0;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 10px;
+    line-height: 12px;
+    font-style: normal;
+    font-weight: normal;
+    color: #8b8b8b;
+    margin: 10px auto 10px 0;
+}
+
+.register__input {
+    padding: 0;
+    margin: 0;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 13px;
+    line-height: 16px;
+    font-style: normal;
+    font-weight: normal;
+    color: #FFFFFF;
+    width: 381px;
+    height: 46px;
+    background-color: #2F2F2F;
+    border-radius: 8px;
+    border: none;
+    padding-left: 15px;
+    outline: none;
+    margin: 0 auto 10px auto;
+}
+
+.register__input-error {
+    padding: 0;
+    margin: 0;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 13px;
+    line-height: 16px;
+    font-style: normal;
+    font-weight: normal;
+    color: #EE3465;
+    width: 381px;
+    height: 46px;
+    background-color: #2F2F2F;
+    border-radius: 8px;
+    border: none;
+    padding-left: 15px;
+    outline: none;
+    margin: 0 auto 10px auto;
+}
+
+.register__name-error-container {
+    max-width: 396px;
+    height: 10px;
+    margin: 0 auto 70px 0;
+}
+
+.register__name-error {
+    padding: 0;
+    margin: 0;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 10px;
+    line-height: 12px;
+    font-style: normal;
+    font-weight: normal;
+    color: #EE3465;
+    text-align: start;
+}
+
+.register__name-error-none {
+    display: none;
+}
+
+.register__button {
+    padding: 0;
+    margin: 0;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 17px;
+    font-style: normal;
+    font-weight: normal;
+    color: #FFFFFF;
+    text-align: center;
+    width: 396px;
+    height: 45px;
+    background-color: #4285f4;
+    border-radius: 3px;
+    border: none;
+    margin-bottom: 16px;
+}
+
+.register__button:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: 0.5s;
+}
+
+.register__button-disable {
+    padding: 0;
+    margin: 0;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 17px;
+    font-style: normal;
+    font-weight: normal;
+    color: #000000;
+    text-align: center;
+    width: 396px;
+    height: 45px;
+    background-color: #f8f8f8;
+    border-radius: 3px;
+    border: none;
+    margin-bottom: 16px;
+}
+
+.register__button-disable:hover {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: 0.5s;
+}
+
+.register__signin-container {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto 70px auto;
+}
+
+.register__signin-text {
+    padding: 0;
+    margin: 0;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 17px;
+    font-style: normal;
+    font-weight: normal;
+    color: #8b8b8b;
+    margin-right: 6px;
+}
+
+.register__signin-link {
+    padding: 0;
+    margin: 0;
+    font-family: inter, 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 17px;
+    font-style: normal;
+    font-weight: normal;
+    color: #4285f4;
+    text-decoration: none;
+}
+
+.register__signin-link:hover {
+    opacity: 0.7;
+    transition: 0.5s;
+}
+
+
+.register__name-error_none {
+    display: none;
+}
+
+@media (max-width:850px) {
+    .register__logo {
+        padding-top: 232px;
+    }
+
+    .register__signin-container {
+        margin: 0 auto 232px auto;
+    }
+}
+
+
+@media (max-width:450px) {
+    .register__container {
+        max-width: 260px;
+        margin: 0 auto 0 auto;
+    }
+
+    .register__logo {
+        padding-top: 56px;
+        margin: 0 auto 50px auto;
+    }
+
+    .register__input-name {
+        margin: 10px auto 10px 0;
+    }
+
+    .register__title {
+        margin: 146px auto 70px auto;
+    }
+
+    .pegister__input {
+        width: 245px;
+    }
+
+    .pegister__input-error {
+        width: 245px;
+    }
+
+    .register__button {
+        width: 260px;
+        font-size: 12px;
+        line-height: 14px;
+    }
+
+    .register__button-disable {
+        width: 260px;
+        font-size: 12px;
+        line-height: 14px;
+    }
+
+    .register__signin-container {
+        margin: 0 auto 232px auto;
+    }
+
+    .register__name-error-container {
+        margin-bottom: 159px;
+    }
+
+    .register__signin-text {
+        font-size: 12px;
+        line-height: 14px;
+    }
+
+    .register__signin-link {
+        font-size: 12px;
+        line-height: 14px;
+    }
+
+}
+</style>
